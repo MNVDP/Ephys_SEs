@@ -1,0 +1,47 @@
+clear all
+
+nums = zeros(243,5);
+
+for i = 1:243
+   aux = dec2base(i-1,3,5);
+   nums(i,:) = [str2double(aux(1)) str2double(aux(2)) str2double(aux(3)) str2double(aux(4)) str2double(aux(5))]; 
+end
+
+nums_logic = zeros(243,5);
+
+for i = 1:243
+    
+    nums_logic(i,nums(i,:) == nums(i,1)) = 0;
+    aux = 1;
+    
+    for j = 2:5
+           if nnz(nums(i,1:j-1) == nums(i,j)) == 0%if a new element
+              nums_logic(i,nums(i,:) == nums(i,j)) = aux;
+              aux = aux + 1;
+           end
+    end 
+    
+end
+
+trinomial_x_labels = unique(nums_logic,'rows');
+
+trinomial_x_labels = trinomial_x_labels';
+
+trinomial_x_labels(trinomial_x_labels == 0) = 'X'; 
+trinomial_x_labels(trinomial_x_labels == 1) = 'Y'; 
+trinomial_x_labels(trinomial_x_labels == 2) = 'Z';
+
+trinomial_x_labels = num2cell(trinomial_x_labels,1);
+
+for i = 1:41
+    trinomial_x_labels{i} = [trinomial_x_labels{i} zeros(5,5)];
+end
+
+for i = 1:41
+    trinomial_x_labels{i} = char(trinomial_x_labels{i});
+    trinomial_x_labels{i}(5,:) = ['\bf{',trinomial_x_labels{i}(5,1),'}'];
+end
+
+trinomial_x_labels_latex = trinomial_x_labels;
+
+save('trinomial_x_labels_latex','trinomial_x_labels_latex');

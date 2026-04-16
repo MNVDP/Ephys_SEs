@@ -1,0 +1,41 @@
+clear all
+
+nums = zeros(243,5);
+
+%order the 243 sequences by their base 3 value
+for i = 1:243
+   aux = dec2base(i-1,3,5);
+   nums(i,:) = [str2double(aux(1)) str2double(aux(2)) str2double(aux(3)) str2double(aux(4)) str2double(aux(5))]; 
+end
+
+%turn sequences into equivalent 'patterns' (the first element is always 0)
+nums_logic = zeros(243,5);
+for i = 1:243
+    nums_logic(i,nums(i,:) == nums(i,1)) = 0;
+    aux = 1;
+    for j = 2:5
+           if nnz(nums(i,1:j-1) == nums(i,j)) == 0%if a new element
+              nums_logic(i,nums(i,:) == nums(i,j)) = aux;
+              aux = aux + 1;
+           end
+    end 
+end
+
+%unique 'patterns'
+aux = unique(nums_logic,'rows');
+
+%convert 'patterns' back to numbers
+b = zeros(1,length(nums_logic));
+for i = 1:length(nums_logic)
+   b(i) = base2dec(num2str(nums_logic(i,:),'%g'),3);
+end
+
+b_unique = unique(b);
+
+index_trinomial = cell(1,length(b_unique));
+
+for i = 1:length(b_unique)
+   index_trinomial{i} = find(b==b_unique(i));
+end
+
+save('index_trinomial','index_trinomial');

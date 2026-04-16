@@ -1,0 +1,45 @@
+function create_seq_eff_plot(RT_data,fit_data)
+
+%for testing
+%RT_data = rand(1,16); fit_data = rand(1,16);
+
+plot(RT_data,'marker','.','markersize',15,'linewidth',2); 
+
+if nargin >1
+    hold on; plot(fit_data,'r--','marker','.','markersize',15,'linewidth',2);
+end
+
+load binomial_x_labels_latex
+
+%kill x ticks and make figure smaller
+set(gca,'xtick',[],'position',get(gca,'position')+[.05 .1 -0.1 -0.1]);
+
+xlim([.5 16.5]);
+
+currentYlim = [0 1]; %get(gca,'ylim');
+
+ylim_range = ylim
+
+%make x labels as text
+for i = 1:16
+    text(i,currentYlim(1),binomial_x_labels_latex{i},'VerticalAlignment','top','HorizontalAlignment','center','fontsize',10,'fontweight','bold','interpreter','latex'); %#ok<USENS>
+end
+
+give = .001;
+
+%make vertical lines
+if nargin >1
+
+    for i = 1:16
+        line([i i],[currentYlim(1)+give min(RT_data(i),fit_data(i))-give],'color',[.8 .8 .8]);
+    end
+
+else
+    
+    for i = 1:16
+        line([i i],[currentYlim(1)+give RT_data(i)-give],'color',[.8 .8 .8]);
+    end
+
+end
+
+end
